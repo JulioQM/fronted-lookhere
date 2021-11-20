@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fronted_lookhere/src/provider/loginFormProvider.dart';
-import 'package:provider/provider.dart';
-
+import 'package:fronted_lookhere/src/provider/exportProvider.dart';
 import 'package:fronted_lookhere/src/utils/inputDecoration.dart';
+import 'package:fronted_lookhere/src/widgets/combo.dart';
 import 'package:fronted_lookhere/src/widgets/exportWidgets.dart';
+import 'package:fronted_lookhere/src/widgets/listaProvincia.dart';
+import 'package:provider/provider.dart';
 
 class RegisterResidenciaPages extends StatelessWidget {
   @override
@@ -25,7 +26,7 @@ class RegisterResidenciaPages extends StatelessWidget {
                       SizedBox(height: 10),
                       ChangeNotifierProvider(
                         // crea una instancia changeNotifierProvider
-                        create: (_) => LoginFormProvider(),
+                        create: (_) => PersonaProvider(),
                         child: _FormularioRegister(),
                       )
                     ],
@@ -45,32 +46,36 @@ class _FormularioRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // con esta variable puedo ingresar a la instancia de la clase LoginFormProvider
-    final loginForm = Provider.of<LoginFormProvider>(context);
+    final personaForm = Provider.of<PersonaProvider>(context);
     return Container(
       child: Form(
-        key: loginForm.formKey,
+        key: personaForm.formKey,
         // activar validacion en modo de interacion
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: <Widget>[
-            TextFormField(
+            /* TextFormField(
               autocorrect: true,
               decoration: InputDecorations.loginInputDecoration(
                   labelText: 'Provincia',
                   hintText: 'Ingrese la provincia',
                   prefixIcon: Icons.person_pin_circle_outlined),
-              onChanged: (value) => loginForm.email = value,
-            ),
+              onChanged: (value) =>
+                  personaForm.managerPersona.setProvId = value,
+            ), */
+            FuterBuilders(),
             SizedBox(height: 20),
-            TextFormField(
+            /* TextFormField(
               autocorrect: true,
               decoration: InputDecorations.loginInputDecoration(
                   labelText: 'Ciudad actual',
                   hintText: 'Ingrese su ciudad',
                   prefixIcon: Icons.person_pin_circle_outlined),
               // agrego el valor de las cajas de texto al provider
-              onChanged: (value) => loginForm.password = value,
-            ),
+              onChanged: (value) =>
+                  personaForm.managerPersona.setCiudId = value,
+            ), */
+            DropdownMenuItems(),
             SizedBox(height: 20),
             TextFormField(
               autocorrect: true,
@@ -79,7 +84,8 @@ class _FormularioRegister extends StatelessWidget {
                   hintText: 'Ingrese su dirección',
                   prefixIcon: Icons.house_outlined),
               // agrego el valor de las cajas de texto al provider
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) =>
+                  personaForm.managerPersona.setPersDireccion = value,
             ),
             SizedBox(height: 30),
             MaterialButton(
@@ -93,27 +99,13 @@ class _FormularioRegister extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                 child: Text(
                   'Continuar registro',
-                  /*  loginForm.isLoading ? 'Espere..' : "Ingresar", */
                   style: TextStyle(color: Colors.white),
                 ),
               ),
               onPressed: () {
                 Navigator.pushReplacementNamed(context, 'familiar');
+                FuterBuilders();
               },
-              /* onPressed: loginForm.isLoading
-                  ? null
-                  : () async {
-                      //quitar teclado para que no este clikeando
-                      FocusScope.of(context).unfocus();
-                      //TODO login
-                      if (!loginForm.isValidForm()) return;
-                      loginForm.isLoading = true;
-
-                      await Future.delayed(Duration(seconds: 2));
-                      // TODO validar si el correo es correo
-                      loginForm.isLoading = false;
-                      Navigator.pushReplacementNamed(context, 'home');
-                    }, */
             )
           ],
         ),

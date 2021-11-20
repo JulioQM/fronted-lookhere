@@ -1,7 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:fronted_lookhere/src/pages/exportPages.dart';
+import 'package:fronted_lookhere/src/provider/exportProvider.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(AppStage());
+
+class AppStage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // para mucho provedores de informacion
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (_) => ProvinciaProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LoginFormProvider(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LoginProvider(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UsuarioProvider(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FamiliaProvider(),
+          lazy: false,
+        )
+      ],
+      child: MyApp(),
+    );
+  }
+}
 
 // USO DE STATELESWIDGET YA QUE SON ELEMENTOS DINAMICOS
 class MyApp extends StatelessWidget {
@@ -16,7 +50,7 @@ class MyApp extends StatelessWidget {
       routes: {
         'login': (_) => LoginPages(),
         'usuario': (_) => RegisterUsuarioPages(),
-        'register': (_) => RegisterPages(),
+        'identidad': (_) => RegisterIdentidadPages(),
         'residencia': (_) => RegisterResidenciaPages(),
         'familiar': (_) => RegisterFamiliarPages(),
         'historial_clinico': (_) => RegisterMedicacionPages(),

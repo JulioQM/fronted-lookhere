@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fronted_lookhere/src/provider/loginFormProvider.dart';
-import 'package:fronted_lookhere/src/utils/textButton.dart';
+import 'package:fronted_lookhere/src/models/exportModels.dart';
+import 'package:fronted_lookhere/src/provider/exportProvider.dart';
+import 'package:fronted_lookhere/src/utils/exportUtils.dart';
+import 'package:fronted_lookhere/src/widgets/exportWidgets.dart';
 import 'package:provider/provider.dart';
 
-import 'package:fronted_lookhere/src/utils/inputDecoration.dart';
-import 'package:fronted_lookhere/src/widgets/exportWidgets.dart';
+var idUsuario = '';
 
 class RegisterUsuarioPages extends StatelessWidget {
   @override
@@ -29,7 +30,7 @@ class RegisterUsuarioPages extends StatelessWidget {
                       SizedBox(height: 10),
                       ChangeNotifierProvider(
                         // crea una instancia changeNotifierProvider
-                        create: (_) => LoginFormProvider(),
+                        create: (_) => UsuarioProvider(),
                         child: _FormularioRegister(),
                       )
                     ],
@@ -55,10 +56,10 @@ class _FormularioRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // con esta variable puedo ingresar a la instancia de la clase LoginFormProvider
-    final loginForm = Provider.of<LoginFormProvider>(context);
+    final usuarioForm = Provider.of<UsuarioProvider>(context, listen: true);
     return Container(
       child: Form(
-        key: loginForm.formKey,
+        key: usuarioForm.formKey,
         // activar validacion en modo de interacion
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
@@ -67,9 +68,10 @@ class _FormularioRegister extends StatelessWidget {
               autocorrect: true,
               decoration: InputDecorations.loginInputDecoration(
                   labelText: 'Nombre de usuario',
-                  hintText: 'Ingrese su nombre de usaurio',
+                  hintText: 'Ingrese su nombre de usuario',
                   prefixIcon: Icons.account_box_rounded),
-              onChanged: (value) => loginForm.email = value,
+              onChanged: (value) =>
+                  usuarioForm.managerUsuario.setUsuaAlias = value,
             ),
             SizedBox(height: 20),
             TextFormField(
@@ -79,7 +81,8 @@ class _FormularioRegister extends StatelessWidget {
                   hintText: 'example@hotmail.com',
                   prefixIcon: Icons.attach_email_outlined),
               // agrego el valor de las cajas de texto al provider
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) =>
+                  usuarioForm.managerUsuario.setUsuaEmail = value,
             ),
             SizedBox(height: 20),
             TextFormField(
@@ -89,10 +92,11 @@ class _FormularioRegister extends StatelessWidget {
                   hintText: '**********',
                   prefixIcon: Icons.lock_outline),
               // agrego el valor de las cajas de texto al provider
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) =>
+                  usuarioForm.managerUsuario.setUsuaClave = value,
             ),
             SizedBox(height: 20),
-            TextFormField(
+            /* TextFormField(
               autocorrect: true,
               decoration: InputDecorations.loginInputDecoration(
                   labelText: 'Repita su Password',
@@ -100,43 +104,40 @@ class _FormularioRegister extends StatelessWidget {
                   prefixIcon: Icons.lock_open_outlined),
               // agrego el valor de las cajas de texto al provider
               onChanged: (value) => loginForm.password = value,
-            ),
+            ), */
             SizedBox(height: 30),
             MaterialButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              disabledColor: Colors.grey,
-              elevation: 0,
-              color: Colors.deepPurple,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                child: Text(
-                  loginForm.isLoading ? 'Espere..' : "Continuar registro",
-                  style: TextStyle(color: Colors.white),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, 'register');
-              },
-              /*  onPressed: loginForm.isLoading
-                  ? null
-                  : () async {
-                      //quitar teclado para que no este clikeando
-                      FocusScope.of(context).unfocus();
-                      //TODO login
-                      if (!loginForm.isValidForm()) return;
-                      loginForm.isLoading = true;
+                disabledColor: Colors.grey,
+                elevation: 0,
+                color: Colors.deepPurple,
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  child: Text(
+                    "Continuar registro",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, 'identidad');
+                }
 
-                      await Future.delayed(Duration(seconds: 2));
-                      // TODO validar si el correo es correo
-                      loginForm.isLoading = false;
-                      Navigator.pushReplacementNamed(context, 'home');
-                    }, */
-            )
+                /* () async {
+                RespuestaModel respuesta = await usuarioForm.registrarUsuario();
+                print(respuesta.data);
+                idUsuario = respuesta.data;
+                (respuesta.success)
+                    ? Navigator.pushReplacementNamed(context, 'register')
+                    : print(respuesta.mensaje);
+              }, */
+                )
           ],
         ),
       ),
     );
   }
 }
+
+final idusuario = idUsuario;

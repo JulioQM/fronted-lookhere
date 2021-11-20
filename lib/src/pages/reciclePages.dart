@@ -1,19 +1,31 @@
+// login
 import 'package:flutter/material.dart';
 import 'package:fronted_lookhere/src/models/exportModels.dart';
-import 'package:fronted_lookhere/src/provider/exportProvider.dart';
-import 'package:fronted_lookhere/src/utils/exportUtils.dart';
+import 'package:fronted_lookhere/src/provider/loginFormProvider.dart';
+import 'package:fronted_lookhere/src/provider/provinciaProvider.dart';
+import 'package:fronted_lookhere/src/utils/textButton.dart';
+import 'package:fronted_lookhere/src/utils/inputDecoration.dart';
 import 'package:fronted_lookhere/src/widgets/exportWidgets.dart';
 import 'package:provider/provider.dart';
 
-class LoginPages extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPagesState createState() => _LoginPagesState();
+}
+
+class _LoginPagesState extends State<LoginPage> {
+  Provincia miprovincia;
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<ProvinciaProvider>(context, listen: true);
+
     return Scaffold(
       body: LoginBackground(
         child: ListView(
           children: <Widget>[
             Column(
               children: <Widget>[
+                /*   SizedBox(height: 250), */
                 SizedBox(height: 200),
                 CardContainer(
                   // llamo mi widget contenedor
@@ -25,7 +37,7 @@ class LoginPages extends StatelessWidget {
                       SizedBox(height: 30),
                       ChangeNotifierProvider(
                         // crea una instancia changeNotifierProvider
-                        create: (_) => LoginProvider(),
+                        create: (_) => LoginFormProvider(),
                         child: _FormularioLogin(),
                       )
                     ],
@@ -51,7 +63,8 @@ class _FormularioLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // con esta variable puedo ingresar a la instancia de la clase LoginFormProvider
-    final loginForm = Provider.of<LoginProvider>(context, listen: true);
+    final loginForm = Provider.of<LoginFormProvider>(context, listen: true);
+
     return Container(
       child: Form(
           key: loginForm.formKey,
@@ -64,11 +77,19 @@ class _FormularioLogin extends StatelessWidget {
                 keyboardType: TextInputType.text,
                 style: TextStyle(), //agrega @ en teclado
                 decoration: InputDecorations.loginInputDecoration(
-                    labelText: 'Alias',
-                    hintText: 'nick',
-                    prefixIcon: Icons.person_outline),
-                onChanged: (value) =>
-                    loginForm.managerUsuario.setUsuaAlias = value,
+                    labelText: 'Correo Electrónico',
+                    hintText: 'example@hotmail.com',
+                    prefixIcon: Icons.attach_email),
+                onChanged: (value) => loginForm.email = value,
+                /* validator: (value) {
+                  String pattern =
+                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                  RegExp regExp = new RegExp(pattern);
+
+                  return regExp.hasMatch(value ?? '')
+                      ? null
+                      : 'No valor ingresado no luce como un correo valido';
+                }, */
               ),
               SizedBox(height: 30),
               TextFormField(
@@ -80,8 +101,14 @@ class _FormularioLogin extends StatelessWidget {
                     hintText: '**********',
                     prefixIcon: Icons.lock_outline),
                 // agrego el valor de las cajas de texto al provider
-                onChanged: (value) =>
-                    loginForm.managerUsuario.setUsuaClave = value,
+                onChanged: (value) => loginForm.password = value,
+                /*  validator: (value) {
+                  if (value != null && value.length >= 6) {
+                    return null;
+                  } else {
+                    return 'La contraseña debe de tener mas de 6 caracteres';
+                  }
+                }, */
               ),
               SizedBox(height: 30),
               MaterialButton(
@@ -94,24 +121,34 @@ class _FormularioLogin extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                   child: Text(
-                    "Ingresar",
+                    loginForm.isLoading ? 'Espere..' : "Ingresar",
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                onPressed: () async {
-                  RespuestaModel respuesta = await loginForm.autentiacion();
-                  if (respuesta.success ?? true) {
-                    print(respuesta.mensaje);
-                    // si es correcto me navegara a la pantalla principal
-                    await Future.delayed(Duration(seconds: 3));
-                    Navigator.pushReplacementNamed(context, 'home');
-                  } else {
-                    print(respuesta.mensaje);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(respuesta.mensaje),
-                    ));
-                  }
-                },
+                onPressed: loginForm.isLoading
+                    ? null
+                    : () async {
+                        //quitar teclado para que no este clikeando
+                        FocusScope.of(context).unfocus();
+                        //TODO login
+                        if (!loginForm.isValidForm()) return;
+                        loginForm.isLoading = true;
+
+                        await Future.delayed(Duration(seconds: 10));
+                        // TODO validar si el correo es correo
+                        loginForm.isLoading = false;
+                        // Navigator.pushReplacementNamed(context, 'home');
+
+                        bool verificacionBandera =
+                            await loginForm.autenticacion();
+
+                        if (verificacionBandera) {
+                          Navigator.pushReplacementNamed(context, "home");
+                        } else
+                          return;
+
+                        print(loginForm.email + '......' + loginForm.password);
+                      },
               ),
               SizedBox(height: 30),
               TextButtons.etiquetaTextButton(

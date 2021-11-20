@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fronted_lookhere/src/provider/loginFormProvider.dart';
-import 'package:provider/provider.dart';
-
-import 'package:fronted_lookhere/src/utils/inputDecoration.dart';
+import 'package:fronted_lookhere/src/models/exportModels.dart';
+import 'package:fronted_lookhere/src/provider/exportProvider.dart';
+import 'package:fronted_lookhere/src/utils/exportUtils.dart';
 import 'package:fronted_lookhere/src/widgets/exportWidgets.dart';
+import 'package:provider/provider.dart';
 
 class RegisterFamiliarPages extends StatelessWidget {
   @override
@@ -25,7 +25,7 @@ class RegisterFamiliarPages extends StatelessWidget {
                       SizedBox(height: 10),
                       ChangeNotifierProvider(
                         // crea una instancia changeNotifierProvider
-                        create: (_) => LoginFormProvider(),
+                        create: (_) => FamiliaProvider(),
                         child: _FormularioRegister(),
                       )
                     ],
@@ -45,10 +45,10 @@ class _FormularioRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // con esta variable puedo ingresar a la instancia de la clase LoginFormProvider
-    final loginForm = Provider.of<LoginFormProvider>(context);
+    final familiaForm = Provider.of<FamiliaProvider>(context);
     return Container(
       child: Form(
-        key: loginForm.formKey,
+        key: familiaForm.formKey,
         // activar validacion en modo de interacion
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
@@ -59,7 +59,8 @@ class _FormularioRegister extends StatelessWidget {
                   labelText: 'Nombres ',
                   hintText: 'Ingrese el nombre',
                   prefixIcon: Icons.account_box_rounded),
-              onChanged: (value) => loginForm.email = value,
+              onChanged: (value) =>
+                  familiaForm.managerFamiliar.setFamilNombres = value,
             ),
             SizedBox(height: 20),
             TextFormField(
@@ -69,7 +70,8 @@ class _FormularioRegister extends StatelessWidget {
                   hintText: 'Ingrese su apellido',
                   prefixIcon: Icons.account_box_rounded),
               // agrego el valor de las cajas de texto al provider
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) =>
+                  familiaForm.managerFamiliar.setFamilApellidos = value,
             ),
             SizedBox(height: 20),
             TextFormField(
@@ -79,7 +81,8 @@ class _FormularioRegister extends StatelessWidget {
                   hintText: 'Ingrese su numero celular',
                   prefixIcon: Icons.add_call),
               // agrego el valor de las cajas de texto al provider
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) =>
+                  familiaForm.managerFamiliar.setFamilCelular = value,
             ),
             SizedBox(height: 20),
             TextFormField(
@@ -89,7 +92,8 @@ class _FormularioRegister extends StatelessWidget {
                   hintText: 'Ingrese su numero convecional',
                   prefixIcon: Icons.add_call),
               // agrego el valor de las cajas de texto al provider
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) =>
+                  familiaForm.managerFamiliar.setFamilConvencional = value,
             ),
             SizedBox(height: 20),
             TextFormField(
@@ -99,7 +103,8 @@ class _FormularioRegister extends StatelessWidget {
                   hintText: 'Ingrese su dirección',
                   prefixIcon: Icons.house_outlined),
               // agrego el valor de las cajas de texto al provider
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) =>
+                  familiaForm.managerFamiliar.setFamilDireccion = value,
             ),
             SizedBox(height: 30),
             MaterialButton(
@@ -117,24 +122,15 @@ class _FormularioRegister extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
+                RespuestaModel respuesta =
+                    await familiaForm.registrarFamiliar();
+                print('...................');
+                print(respuesta.data);
+                //await Future.delayed(Duration(seconds: 3));
                 Navigator.pushReplacementNamed(context, 'historial_clinico');
               },
-              /* onPressed: loginForm.isLoading
-                  ? null
-                  : () async {
-                      //quitar teclado para que no este clikeando
-                      FocusScope.of(context).unfocus();
-                      //TODO login
-                      if (!loginForm.isValidForm()) return;
-                      loginForm.isLoading = true;
-
-                      await Future.delayed(Duration(seconds: 2));
-                      // TODO validar si el correo es correo
-                      loginForm.isLoading = false;
-                      Navigator.pushReplacementNamed(context, 'home');
-                    }, */
-            )
+            ),
           ],
         ),
       ),
