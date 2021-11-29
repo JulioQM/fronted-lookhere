@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fronted_lookhere/src/models/exportModels.dart';
-import 'package:fronted_lookhere/src/provider/ruta.dart';
+import 'package:fronted_lookhere/src/routes/ruta.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ProvinciaProvider extends ChangeNotifier {
-  Provincia managerProvincia = new Provincia();
+  //Provincia managerProvincia = new Provincia();
   // metodo que extrae mis datos
   Future<List<Provincia>> getProvincias() async {
     var url = Uri.https(path.rutaEndPoint, path.pathProvincia);
@@ -21,7 +21,7 @@ class ProvinciaProvider extends ChangeNotifier {
     }
     // imprimo la lista de solo nombres de provincias
     for (var p in prov) {
-      //print(p.provNombre);
+      print(p.provNombre);
     }
     // Retorno mi lista de provincias
     return prov;

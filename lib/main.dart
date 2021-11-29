@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fronted_lookhere/src/pages/exportPages.dart';
 import 'package:fronted_lookhere/src/provider/exportProvider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(AppStage());
@@ -16,12 +17,12 @@ class AppStage extends StatelessWidget {
           create: (_) => ProvinciaProvider(),
         ),
         ChangeNotifierProvider(
-          create: (_) => LoginFormProvider(),
-          lazy: false,
+          lazy: true,
+          create: (_) => CiudadProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => LoginProvider(),
-          lazy: false,
+          lazy: true,
         ),
         ChangeNotifierProvider(
           create: (_) => UsuarioProvider(),
@@ -30,7 +31,11 @@ class AppStage extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => FamiliaProvider(),
           lazy: false,
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PersonaProvider(),
+          lazy: false,
+        ),
       ],
       child: MyApp(),
     );
@@ -43,6 +48,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', 'US'), // English, no country code
+        Locale('es', 'ES'), // Spanish, no country code
+      ],
       title: 'Bienvenidos al LookHere',
       // en este apartado inicializo cual va hacer la pantalla principal
       initialRoute: 'login',
@@ -53,8 +67,9 @@ class MyApp extends StatelessWidget {
         'identidad': (_) => RegisterIdentidadPages(),
         'residencia': (_) => RegisterResidenciaPages(),
         'familiar': (_) => RegisterFamiliarPages(),
-        'historial_clinico': (_) => RegisterMedicacionPages(),
+        'expediente': (_) => RegisterExpedientePages(),
         'home': (_) => HomePages(),
+        'perfil': (_) => PerfilPages(),
       },
       theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: Colors.grey[300],

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fronted_lookhere/src/provider/exportProvider.dart';
 import 'package:fronted_lookhere/src/utils/inputDecoration.dart';
 import 'package:fronted_lookhere/src/widgets/exportWidgets.dart';
+import 'package:fronted_lookhere/src/provider/exportProvider.dart';
 import 'package:provider/provider.dart';
 
-class RegisterMedicacionPages extends StatelessWidget {
+class RegisterExpedientePages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,12 +19,12 @@ class RegisterMedicacionPages extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       SizedBox(height: 10),
-                      Text('Completa tus datos médicos',
+                      Text('Completa tu expediente médico',
                           style: Theme.of(context).textTheme.headline6),
                       SizedBox(height: 10),
                       ChangeNotifierProvider(
                         // crea una instancia changeNotifierProvider
-                        create: (_) => PersonaProvider(),
+                        create: (_) => ExpedienteProvider(),
                         child: _FormularioRegister(),
                       )
                     ],
@@ -44,44 +44,57 @@ class _FormularioRegister extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // con esta variable puedo ingresar a la instancia de la clase LoginFormProvider
-    final personaForm = Provider.of<PersonaProvider>(context);
+    final expedienteForm = Provider.of<ExpedienteProvider>(context);
     return Container(
       child: Form(
-        key: personaForm.formKey,
+        key: expedienteForm.formKey,
         // activar validacion en modo de interacion
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: <Widget>[
             TextFormField(
               autocorrect: true,
-              decoration: InputDecorations.loginInputDecoration(
-                  labelText: 'Medicación',
-                  hintText: 'Usa alguna medicicación',
+              decoration: InputDecorations.inputDecoration(
+                  labelText: 'Enfermedad',
+                  hintText: 'Tiene alguna enfermedad',
                   prefixIcon: Icons.medical_services_outlined),
               onChanged: (value) =>
-                  personaForm.managerPersona.setPersDescMedicacion = value,
+                  expedienteForm.managerExpediente.setEnferNombre = value,
             ),
             SizedBox(height: 20),
             TextFormField(
+              maxLines: 2,
               autocorrect: true,
-              decoration: InputDecorations.loginInputDecoration(
-                  labelText: 'Docificación',
-                  hintText: 'Usa algun tratamiento',
-                  prefixIcon: Icons.medical_services_outlined),
-              // agrego el valor de las cajas de texto al provider
-              onChanged: (value) =>
-                  personaForm.managerPersona.setPersDescDosificacion = value,
-            ),
-            SizedBox(height: 20),
-            TextFormField(
-              autocorrect: true,
-              decoration: InputDecorations.loginInputDecoration(
+              decoration: InputDecorations.inputDecoration(
                   labelText: 'Enfermedad',
                   hintText: 'Tiene alguna enfermedad',
                   prefixIcon: Icons.medical_services_outlined),
               // agrego el valor de las cajas de texto al provider
-              onChanged: (value) =>
-                  personaForm.managerPersona.setPersDescEnfermedad = value,
+              onChanged: (value) => expedienteForm
+                  .managerExpediente.setEnferDescEnfermedad = value,
+            ),
+            SizedBox(height: 20),
+            TextFormField(
+              maxLines: 2,
+              autocorrect: true,
+              decoration: InputDecorations.inputDecoration(
+                  labelText: 'Medicación',
+                  hintText: 'Usa alguna medicicación',
+                  prefixIcon: Icons.medical_services_outlined),
+              onChanged: (value) => expedienteForm
+                  .managerExpediente.setEnferDescMedicacion = value,
+            ),
+            SizedBox(height: 20),
+            TextFormField(
+              maxLines: 2,
+              autocorrect: true,
+              decoration: InputDecorations.inputDecoration(
+                  labelText: 'Docificación',
+                  hintText: 'Usa algun tratamiento',
+                  prefixIcon: Icons.medical_services_outlined),
+              // agrego el valor de las cajas de texto al provider
+              onChanged: (value) => expedienteForm
+                  .managerExpediente.setEnferDescDosificacion = value,
             ),
             SizedBox(height: 30),
             MaterialButton(
@@ -94,7 +107,7 @@ class _FormularioRegister extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                 child: Text(
-                  'Finalizar registro',
+                  'Finalizar ',
                   /*  loginForm.isLoading ? 'Espere..' : "Ingresar", */
                   style: TextStyle(color: Colors.white),
                 ),

@@ -3,6 +3,7 @@ import 'package:fronted_lookhere/src/models/exportModels.dart';
 import 'package:fronted_lookhere/src/provider/exportProvider.dart';
 import 'package:fronted_lookhere/src/utils/exportUtils.dart';
 import 'package:fronted_lookhere/src/widgets/exportWidgets.dart';
+import 'package:fronted_lookhere/src/widgets/widgetArgument.dart';
 import 'package:provider/provider.dart';
 
 class LoginPages extends StatelessWidget {
@@ -14,7 +15,7 @@ class LoginPages extends StatelessWidget {
           children: <Widget>[
             Column(
               children: <Widget>[
-                SizedBox(height: 200),
+                SizedBox(height: 120),
                 CardContainer(
                   // llamo mi widget contenedor
                   child: Column(
@@ -31,7 +32,6 @@ class LoginPages extends StatelessWidget {
                     ],
                   ),
                 ),
-                /* SizedBox(height: 50), */
                 SizedBox(height: 30),
                 TextButtons.etiquetaTextButton(
                     titulo: 'Crear una nueva cuenta',
@@ -52,38 +52,51 @@ class _FormularioLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     // con esta variable puedo ingresar a la instancia de la clase LoginFormProvider
     final loginForm = Provider.of<LoginProvider>(context, listen: true);
+    final persForm = Provider.of<PersonaProvider>(context, listen: true);
     return Container(
       child: Form(
           key: loginForm.formKey,
-          // activar validacion en modo de interacion
+          // activar validacion en modo de interación con la pantalla
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: <Widget>[
               TextFormField(
                 autocorrect: false,
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.emailAddress,
                 style: TextStyle(), //agrega @ en teclado
-                decoration: InputDecorations.loginInputDecoration(
-                    labelText: 'Alias',
-                    hintText: 'nick',
+                decoration: InputDecorations.inputDecoration(
+                    labelText: 'Usuario',
+                    hintText: 'Ingrese el usuario',
                     prefixIcon: Icons.person_outline),
                 onChanged: (value) =>
                     loginForm.managerUsuario.setUsuaAlias = value,
+                validator: (value) {
+                  return (value != null && value.length > 1)
+                      ? null
+                      : 'El usuario es obligatoria';
+                },
               ),
+              // bloque de repeticion de contraseña
               SizedBox(height: 30),
               TextFormField(
                 autocorrect: false,
                 obscureText: true,
-                keyboardType: TextInputType.text,
-                decoration: InputDecorations.loginInputDecoration(
+                keyboardType: TextInputType.visiblePassword,
+                decoration: InputDecorations.inputDecoration(
                     labelText: 'Password',
                     hintText: '**********',
                     prefixIcon: Icons.lock_outline),
-                // agrego el valor de las cajas de texto al provider
+                // agrego el valor de las cajas de texto en las propiedades del provider
                 onChanged: (value) =>
                     loginForm.managerUsuario.setUsuaClave = value,
+                validator: (value) {
+                  return (value != null && value.length > 1)
+                      ? null
+                      : 'La contraseña es obligatoria';
+                },
               ),
               SizedBox(height: 30),
+              // boton con acción de ingresar
               MaterialButton(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -94,29 +107,55 @@ class _FormularioLogin extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                   child: Text(
-                    "Ingresar",
+                    loginForm.isLoading ? 'Espere' : 'Ingresar',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                onPressed: loginForm.isLoading
+                    ? null
+                    : () async {
+                        FocusScope.of(context).unfocus(); // bloquea mi boton
+                        if (!loginForm.isValidForm()) return;
+                        RespuestaModel respuesta =
+                            await loginForm.autentiacion();
+                        if (respuesta.success ?? true) {
+                          // si es correcto me navegara a la pantalla principal
+                          loginForm.isLoading = true;
+                          print(respuesta.mensaje);
+                          await Future.delayed(Duration(seconds: 2));
+                          Navigator.pushReplacementNamed(context, 'home',
+                              arguments: WidgetArguments(
+                                  loginForm.managerUsuario.getUsuaAlias));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(respuesta.mensaje),
+                          ));
+                        }
+                      },
+              ),
+              MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                color: Colors.pink,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                  child: Text(
+                    'Ingresar',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
                 onPressed: () async {
-                  RespuestaModel respuesta = await loginForm.autentiacion();
-                  if (respuesta.success ?? true) {
-                    print(respuesta.mensaje);
-                    // si es correcto me navegara a la pantalla principal
-                    await Future.delayed(Duration(seconds: 3));
-                    Navigator.pushReplacementNamed(context, 'home');
-                  } else {
-                    print(respuesta.mensaje);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(respuesta.mensaje),
-                    ));
-                  }
+                  var a = await persForm.getListaPersona(2);
+                  print(a);
+                  Navigator.pushReplacementNamed(context, 'perfil');
                 },
               ),
+
               SizedBox(height: 30),
               TextButtons.etiquetaTextButton(
                   titulo: 'Ingresar como administrador',
-                  direccionamientoPagina: 'usuario',
+                  direccionamientoPagina: 'home',
                   context: context),
             ],
           )),

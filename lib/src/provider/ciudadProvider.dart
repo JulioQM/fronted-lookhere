@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fronted_lookhere/src/models/exportModels.dart';
-import 'package:fronted_lookhere/src/provider/ruta.dart';
+import 'package:fronted_lookhere/src/routes/ruta.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -9,9 +9,11 @@ class CiudadProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
   // metodo que extrae mis datos
-  Future<List<Ciudad>> getListaCiudades(String busqueda) async {
+  Future<List<Ciudad>> getListaCiudades(int busqueda) async {
     // String busqueda = '10';
-    var url = Uri.https(path.rutaEndPoint, path.pathCiudad + busqueda);
+    var url =
+        Uri.https(path.rutaEndPoint, path.pathCiudad + busqueda.toString());
+    print(url);
     var response = await http.get(url);
     // cogo los datos de la ruta
     var ciudad = json.decode(response.body);

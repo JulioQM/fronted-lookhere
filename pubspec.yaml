@@ -26,6 +26,8 @@ dependencies:
     sdk: flutter
   http: ^0.13.3
   provider: ^6.0.1
+  flutter_localizations: # Add this line
+    sdk: flutter         # Add this line
 
 dev_dependencies:
   flutter_test:

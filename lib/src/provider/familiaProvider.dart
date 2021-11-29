@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:fronted_lookhere/src/models/exportModels.dart';
-import 'package:fronted_lookhere/src/provider/ruta.dart';
+import 'package:fronted_lookhere/src/routes/ruta.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class FamiliaProvider extends ChangeNotifier {
   Familiar managerFamiliar = new Familiar();
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  bool isValidForm() {
+    print(formKey.currentState?.validate());
+    return formKey.currentState?.validate() ?? false;
+  }
 
   Future<RespuestaModel> registrarFamiliar() async {
     var url = Uri.https(path.rutaEndPoint, path.pathFamiliar);

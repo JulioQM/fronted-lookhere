@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // metodo estatic, y hacer referencia a a la propiedad InputDecoration
 class InputDecorations {
-  static InputDecoration loginInputDecoration({
+  static InputDecoration inputDecoration({
     // parametros obligatorios de la propiedad
     String hintText,
     String labelText,

@@ -20,7 +20,7 @@ class RegisterFamiliarPages extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       SizedBox(height: 10),
-                      Text('Completa tus datos familiares',
+                      Text('Ingresa una referencia familiar',
                           style: Theme.of(context).textTheme.headline6),
                       SizedBox(height: 10),
                       ChangeNotifierProvider(
@@ -55,56 +55,88 @@ class _FormularioRegister extends StatelessWidget {
           children: <Widget>[
             TextFormField(
               autocorrect: true,
-              decoration: InputDecorations.loginInputDecoration(
+              keyboardType: TextInputType.name,
+              decoration: InputDecorations.inputDecoration(
                   labelText: 'Nombres ',
                   hintText: 'Ingrese el nombre',
                   prefixIcon: Icons.account_box_rounded),
               onChanged: (value) =>
                   familiaForm.managerFamiliar.setFamilNombres = value,
+              validator: (value) {
+                return (value != null && value.length >= 1)
+                    ? null
+                    : 'El nombre es obligatoria';
+              },
             ),
             SizedBox(height: 20),
             TextFormField(
               autocorrect: true,
-              decoration: InputDecorations.loginInputDecoration(
+              keyboardType: TextInputType.name,
+              decoration: InputDecorations.inputDecoration(
                   labelText: 'Apellidos ',
                   hintText: 'Ingrese su apellido',
                   prefixIcon: Icons.account_box_rounded),
               // agrego el valor de las cajas de texto al provider
               onChanged: (value) =>
                   familiaForm.managerFamiliar.setFamilApellidos = value,
+              validator: (value) {
+                return (value != null && value.length >= 1)
+                    ? null
+                    : 'El apellido es obligatoria';
+              },
             ),
             SizedBox(height: 20),
             TextFormField(
-              autocorrect: true,
-              decoration: InputDecorations.loginInputDecoration(
+              maxLength: 10,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecorations.inputDecoration(
                   labelText: 'Celular',
                   hintText: 'Ingrese su numero celular',
-                  prefixIcon: Icons.add_call),
+                  prefixIcon: Icons.phone_android_outlined),
               // agrego el valor de las cajas de texto al provider
               onChanged: (value) =>
                   familiaForm.managerFamiliar.setFamilCelular = value,
+              validator: (value) {
+                return (value != null && value.length >= 1)
+                    ? null
+                    : 'El número celular es obligatoria';
+              },
             ),
-            SizedBox(height: 20),
+            /*  SizedBox(height: 20), */
             TextFormField(
-              autocorrect: true,
-              decoration: InputDecorations.loginInputDecoration(
+              maxLength: 10,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecorations.inputDecoration(
                   labelText: 'Convencional',
                   hintText: 'Ingrese su numero convecional',
                   prefixIcon: Icons.add_call),
               // agrego el valor de las cajas de texto al provider
               onChanged: (value) =>
                   familiaForm.managerFamiliar.setFamilConvencional = value,
+              validator: (value) {
+                return (value != null && value.length >= 1)
+                    ? null
+                    : 'La número convencional es obligatoria';
+              },
             ),
-            SizedBox(height: 20),
+            /* SizedBox(height: 20), */
             TextFormField(
+              maxLines: null,
+              //textCapitalization: TextCapitalization.words,
               autocorrect: true,
-              decoration: InputDecorations.loginInputDecoration(
+              //keyboardType: TextInputType.text,
+              decoration: InputDecorations.inputDecoration(
                   labelText: 'Dirección',
                   hintText: 'Ingrese su dirección',
                   prefixIcon: Icons.house_outlined),
               // agrego el valor de las cajas de texto al provider
               onChanged: (value) =>
                   familiaForm.managerFamiliar.setFamilDireccion = value,
+              validator: (value) {
+                return (value != null && value.length >= 1)
+                    ? null
+                    : 'La la dirección es obligatoria';
+              },
             ),
             SizedBox(height: 30),
             MaterialButton(
@@ -117,18 +149,42 @@ class _FormularioRegister extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                 child: Text(
-                  'Continuar registro',
-                  /*  loginForm.isLoading ? 'Espere..' : "Ingresar", */
+                  familiaForm.isLoading ? 'Espere..' : "Siguiente",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              onPressed: familiaForm.isLoading
+                  ? null
+                  : () async {
+                      FocusScope.of(context).unfocus(); // bloquea mi boton
+                      if (!familiaForm.isValidForm()) return;
+                      familiaForm.isLoading = true;
+
+                      await Future.delayed(Duration(seconds: 1));
+                      RespuestaModel respuesta =
+                          await familiaForm.registrarFamiliar();
+                      print(respuesta.data);
+
+                      Navigator.pushReplacementNamed(context, 'expediente');
+                    },
+            ),
+            Divider(),
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              disabledColor: Colors.grey,
+              elevation: 0,
+              color: Colors.pink,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                child: Text(
+                  "Omitir",
                   style: TextStyle(color: Colors.white),
                 ),
               ),
               onPressed: () async {
-                RespuestaModel respuesta =
-                    await familiaForm.registrarFamiliar();
-                print('...................');
-                print(respuesta.data);
-                //await Future.delayed(Duration(seconds: 3));
-                Navigator.pushReplacementNamed(context, 'historial_clinico');
+                Navigator.pushReplacementNamed(context, 'expediente');
               },
             ),
           ],
