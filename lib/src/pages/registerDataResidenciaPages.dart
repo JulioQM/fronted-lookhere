@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fronted_lookhere/src/arguments/personasArguments.dart';
 import 'package:fronted_lookhere/src/models/exportModels.dart';
 import 'package:fronted_lookhere/src/provider/exportProvider.dart';
-import 'package:fronted_lookhere/src/utils/inputDecoration.dart';
+import 'package:fronted_lookhere/src/utils/exportUtils.dart';
 import 'package:fronted_lookhere/src/widgets/exportWidgets.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -65,6 +65,8 @@ class _FormularioRegister extends StatelessWidget {
             /* SizedBox(height: 20), */
             TextFormField(
               autocorrect: true,
+              keyboardType: TextInputType.text,
+              inputFormatters: [UpperCaseTextFormatter()],
               decoration: InputDecorations.inputDecoration(
                   labelText: 'Dirección',
                   hintText: 'Ingrese su dirección',
@@ -73,7 +75,7 @@ class _FormularioRegister extends StatelessWidget {
               onChanged: (value) =>
                   personaForm.managerPersona.setPersDireccion = value,
               validator: (value) {
-                return (value != null && value.length > 1)
+                return (value != null && value.isNotEmpty)
                     ? null
                     : 'La dirección es obligatoria';
               },
@@ -90,16 +92,16 @@ class _FormularioRegister extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                 child: Text(
-                  /* personaForm.isLoading ? 'Espere' :  */ 'Siguiente',
+                  personaForm.isLoading ? 'Espere' : 'Siguiente',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
               onPressed: personaForm.isLoading
                   ? null
                   : () async {
-                      /*  FocusScope.of(context).unfocus(); // bloquea mi boton
-                      if (!usuarioForm.isValidForm()) return; */
-                      /* personaForm.isLoading = true; */
+                      FocusScope.of(context).unfocus(); // bloquea mi boton
+                      if (!usuarioForm.isValidForm()) return;
+                      personaForm.isLoading = true;
                       // llamo a mis parametros de otras clases como usuario y primera parte de identificacion
                       final IdentidadArguments argPersona =
                           ModalRoute.of(context).settings.arguments;
@@ -162,7 +164,7 @@ class _FormularioRegister extends StatelessWidget {
                       await Future.delayed(Duration(seconds: 2));
                       Navigator.pushReplacementNamed(
                         context,
-                        'perfil',
+                        'familiar',
                         arguments: IdPersonaArguments(persId: pers['id']),
                       );
                     },

@@ -1,5 +1,6 @@
 class Familiar {
-  String persId;
+  int familId; // agregado
+  int persId; // camiado
   String familNombres;
   String familApellidos;
   String familCelular;
@@ -7,6 +8,7 @@ class Familiar {
   String familDireccion;
 
   Familiar({
+    this.familId, //agregado
     this.persId,
     this.familNombres,
     this.familApellidos,
@@ -16,6 +18,7 @@ class Familiar {
   });
 
   factory Familiar.fromMap(Map<String, dynamic> json) => Familiar(
+        familId: json["famil_id"],
         persId: json["pers_id"],
         familNombres: json["famil_nombres"],
         familApellidos: json["famil_apellidos"],

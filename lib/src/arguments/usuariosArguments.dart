@@ -4,3 +4,8 @@ class UsuariosArguments {
   final String clave;
   UsuariosArguments({this.nombre, this.correo, this.clave});
 }
+
+class UsuarioIdArguments {
+  final int idUsuario;
+  UsuarioIdArguments({this.idUsuario});
+}

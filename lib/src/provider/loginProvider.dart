@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fronted_lookhere/src/models/exportModels.dart';
-import 'package:fronted_lookhere/src/provider/exportProvider.dart';
 import 'package:fronted_lookhere/src/routes/ruta.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

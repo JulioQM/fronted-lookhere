@@ -36,6 +36,10 @@ class AppStage extends StatelessWidget {
           create: (_) => PersonaProvider(),
           lazy: false,
         ),
+        ChangeNotifierProvider(
+          create: (_) => ExpedienteProvider(),
+          lazy: true,
+        ),
       ],
       child: MyApp(),
     );

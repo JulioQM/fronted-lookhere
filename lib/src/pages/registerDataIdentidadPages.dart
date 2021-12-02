@@ -72,6 +72,7 @@ class __FormularioRegisterState extends State<_FormularioRegister> {
             TextFormField(
               autocorrect: true,
               keyboardType: TextInputType.name,
+              inputFormatters: [UpperCaseTextFormatter()],
               decoration: InputDecorations.inputDecoration(
                   labelText: 'Nombres',
                   hintText: 'Ingrese su nombre',
@@ -80,7 +81,7 @@ class __FormularioRegisterState extends State<_FormularioRegister> {
               onChanged: (value) =>
                   personaForm.managerPersona.setPersNombres = value,
               validator: (value) {
-                return (value != null && value.length > 1)
+                return (value != null && value.isNotEmpty)
                     ? null
                     : 'El nombre  es obligatoria';
               },
@@ -90,6 +91,7 @@ class __FormularioRegisterState extends State<_FormularioRegister> {
             TextFormField(
               autocorrect: true,
               keyboardType: TextInputType.name,
+              inputFormatters: [UpperCaseTextFormatter()],
               decoration: InputDecorations.inputDecoration(
                   labelText: 'Apellidos',
                   hintText: 'Ingrese su apellido',
@@ -98,7 +100,7 @@ class __FormularioRegisterState extends State<_FormularioRegister> {
               onChanged: (value) =>
                   personaForm.managerPersona.setPersApellidos = value,
               validator: (value) {
-                return (value != null && value.length > 1)
+                return (value != null && value.isNotEmpty)
                     ? null
                     : 'El apellido es obligatoria';
               },
@@ -116,8 +118,8 @@ class __FormularioRegisterState extends State<_FormularioRegister> {
               onChanged: (value) =>
                   personaForm.managerPersona.setPersIdentificacion = value,
               validator: (value) {
-                return (value != null && value.length > 1)
-                    ? null
+                return (value != null && value.isNotEmpty)
+                    ? validaciones.validarNumeroCedula(cedula: value)
                     : 'La cédula es obligatoria';
               },
             ),
@@ -134,8 +136,8 @@ class __FormularioRegisterState extends State<_FormularioRegister> {
               onChanged: (value) =>
                   personaForm.managerPersona.setPersCelular = value,
               validator: (value) {
-                return (value != null && value.length > 1)
-                    ? null
+                return (value != null && value.isNotEmpty)
+                    ? validaciones.validarNumero(numero: value)
                     : 'El número de teléfono es obligatoria';
               },
             ),
@@ -158,6 +160,11 @@ class __FormularioRegisterState extends State<_FormularioRegister> {
                     print(opcionSelecionado);
                   },
                 );
+              },
+              validator: (value) {
+                return (value != null && value.isNotEmpty)
+                    ? null
+                    : "Seleccione el genero";
               },
             ),
             SizedBox(height: 30),
@@ -193,7 +200,6 @@ class __FormularioRegisterState extends State<_FormularioRegister> {
                         // llamo a mis argumentos del formulario de Usuario
                         final UsuariosArguments argUsuario =
                             ModalRoute.of(context).settings.arguments;
-                        //print(argUsuario.clave);
                         Map<String, dynamic> user = jsonDecode(respuesta.data);
                         print(user['body']);
                         await Future.delayed(Duration(seconds: 2));

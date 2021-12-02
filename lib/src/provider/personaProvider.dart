@@ -59,7 +59,7 @@ class PersonaProvider extends ChangeNotifier {
   }
 
   Future<RespuestaModel> obtenerEntidad() async {
-    var url = Uri.https(path.rutaEndPoint, path.pathPersonaIdentidad);
+    var url = Uri.https(path.rutaEndPoint, path.pathPersonaValidador);
     print(url);
     var response = await http.post(url,
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
@@ -93,11 +93,11 @@ class PersonaProvider extends ChangeNotifier {
       );
   }
 
-  /// Visualizacion
+  /// Visualizacion de perfil al momento de registrarse
   // metodo que extrae mis datos
   Future<List<Persona>> getListaPersona(int busqueda) async {
-    var url = Uri.https(
-        path.rutaEndPoint, path.pathPersonaJoin + busqueda.toString());
+    var url =
+        Uri.https(path.rutaEndPoint, path.pathPerfilJoin + busqueda.toString());
     print(url);
     var response = await http.get(url);
     Map<String, dynamic> user = jsonDecode(response.body);
@@ -110,6 +110,23 @@ class PersonaProvider extends ChangeNotifier {
       print(p.persNombres);
       print(p.ciudNombre);
     } */
+    return pers;
+  }
+
+  /// Visualizacion de home al momento de iniciar sesion
+  // metodo que extrae mis datos
+  Future<List<Persona>> getHomePersona(int busqueda) async {
+    var url =
+        Uri.https(path.rutaEndPoint, path.pathHomeJoin + busqueda.toString());
+    print(url);
+    var response = await http.get(url);
+    Map<String, dynamic> user = jsonDecode(response.body);
+    print(user);
+    List<Persona> pers = [];
+    user.forEach((key, value) {
+      pers.add(Persona.fromMap(value));
+    });
+
     return pers;
   }
 

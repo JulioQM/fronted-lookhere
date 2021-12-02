@@ -72,7 +72,7 @@ class _FormularioRegister extends StatelessWidget {
               onChanged: (value) =>
                   usuarioForm.managerUsuario.setUsuaAlias = value,
               validator: (value) {
-                return (value != null && value.length > 1)
+                return (value != null && value.isNotEmpty)
                     ? null
                     : 'La nombre de usuario es obligatoria';
               },
@@ -89,7 +89,7 @@ class _FormularioRegister extends StatelessWidget {
                 onChanged: (value) =>
                     usuarioForm.managerUsuario.setUsuaEmail = value,
                 validator: (value) {
-                  if (value != null && value.length > 5) {
+                  if (value != null && value.isNotEmpty) {
                     return validaciones.validarEmail(value);
                   }
                   return 'El correo es obligatorio';
@@ -107,7 +107,7 @@ class _FormularioRegister extends StatelessWidget {
               onChanged: (value) =>
                   usuarioForm.managerUsuario.setUsuaClave = value,
               validator: (value) {
-                return (value != null && value.length > 1)
+                return (value != null && value.isNotEmpty)
                     ? null
                     : 'La contraseña es obligatoria';
               },
@@ -124,7 +124,7 @@ class _FormularioRegister extends StatelessWidget {
               onChanged: (value) => value,
               validator: (value) {
                 var verificador = usuarioForm.managerUsuario.getUsuaClave;
-                return (value != null && value.length > 1)
+                return (value != null && value.isNotEmpty)
                     ? validaciones.validarClave(
                         clave: verificador, claveRepetida: value)
                     : 'La contraseña es obligatoria';

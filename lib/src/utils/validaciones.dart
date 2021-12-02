@@ -18,6 +18,26 @@ class Validaciones {
     }
     return mensaje;
   }
+
+  validarNumero({String numero}) {
+    String pattern = r'^[0]*[0-9]\d{9}$';
+    RegExp phoneRegex = new RegExp(pattern);
+    return phoneRegex.hasMatch(numero ?? '')
+        ? null
+        : 'El valor ingresado no luce como un número telefónico';
+    /* String mensaje = '';
+  if (!val.contains(RegExp(r'[0-9]'))) {
+    return "Password must contain a number";
+  } */
+  }
+
+  validarNumeroCedula({String cedula}) {
+    String pattern = r'[0-9]';
+    RegExp phoneRegex = new RegExp(pattern);
+    return phoneRegex.hasMatch(cedula ?? '')
+        ? null
+        : 'El valor ingresado no luce como un número de cédula';
+  }
 }
 
 final validaciones = new Validaciones();

@@ -5,12 +5,28 @@ class PerfilPages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Perfil'),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Perfil',
         ),
-        body: ListView.builder(
-          itemCount: 1,
-          itemBuilder: (BuildContext context, int index) => PerfilCard(),
-        ));
+        leading: IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, 'login');
+            }),
+      ),
+      body: ListView.builder(
+        itemCount: 1,
+        itemBuilder: (BuildContext context, int index) => PerfilCard(),
+      ),
+    );
   }
 }
+
+
+
+
+
+
+

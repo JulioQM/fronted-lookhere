@@ -1,11 +1,13 @@
-class Expediente {
-  String persId;
+class Enfermedad {
+  int enferId;
+  int persId; //cambiado
   String enferNombre;
   String enferDescMedicacion;
   String enferDescDosificacion;
   String enferDescEnfermedad;
 
-  Expediente({
+  Enfermedad({
+    this.enferId,
     this.persId,
     this.enferNombre,
     this.enferDescMedicacion,
@@ -13,12 +15,13 @@ class Expediente {
     this.enferDescEnfermedad,
   });
 
-  factory Expediente.fromMap(Map<String, dynamic> json) => Expediente(
+  factory Enfermedad.fromMap(Map<String, dynamic> json) => Enfermedad(
+        enferId: json["enfer_id"],
         persId: json["pers_id"],
         enferNombre: json["enfer_nombre"],
         enferDescMedicacion: json["enfer_desc_medicacion"],
         enferDescDosificacion: json["enfer_desc_dosificacion"],
-        enferDescEnfermedad: json["enfer_desc_Expediente"],
+        enferDescEnfermedad: json["enfer_desc_enfermedad"],
       );
 
 // get y set

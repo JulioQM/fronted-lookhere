@@ -6,14 +6,16 @@ class EndPoints {
   String pathAutenticacion = '/api/autenticacion/login';
   String pathUsuario = '/api/lookhere/usuario';
   String pathPersona = '/api/lookhere/persona/';
-  String pathEnfermedad = '/api/lookhere/enfermedad';
+  String pathEnfermedad = '/api/lookhere/enfermedad/';
   String pathProvincia = '/api/lookhere/provincia/';
   String pathCiudad = '/api/lookhere/ciudad/';
   String pathFamiliar = '/api/lookhere/familiar';
 
-  // ruat de consulta
-  String pathPersonaJoin = '/api/lookhere/personaJoin/';
-  // ruta de prueba
+  // ruta de consulta para visulizar el perfil al momento del registro
+  String pathPerfilJoin = '/api/lookhere/personaJoin/';
+  // ruta de consulta para visulizar el perfil al momento del registro
+  String pathHomeJoin = '/api/lookhere/usuarioIdJoin/';
+  // ruta de prueba sin validaciones
   String pathPersonaIdentidad = '/api/lookhere/personaIdentidad';
   // Validadores
   String pathUsuarioValidador = '/api/lookhere/validarUsuario';

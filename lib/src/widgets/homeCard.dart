@@ -6,7 +6,7 @@ import 'package:fronted_lookhere/src/provider/exportProvider.dart';
 import 'package:fronted_lookhere/src/utils/exportUtils.dart';
 import 'package:provider/provider.dart';
 
-class PerfilCard extends StatelessWidget {
+class HomeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -20,7 +20,9 @@ class PerfilCard extends StatelessWidget {
         //color: Colors.black,
         decoration: _cardBorders(),
         child: Stack(
-          children: [_BackgroundImage()],
+          children: [
+            _BackgroundImage(),
+          ],
         ),
       ),
     );
@@ -48,14 +50,15 @@ class _BackgroundImage extends StatelessWidget {
     final persForm = Provider.of<PersonaProvider>(context);
     final familForm = Provider.of<FamiliaProvider>(context);
     final expForm = Provider.of<ExpedienteProvider>(context);
-    final IdPersonaArguments argPersona =
+    final UsuarioIdArguments argUsuario =
         ModalRoute.of(context).settings.arguments;
     return Container(
       margin: EdgeInsets.all(9),
       child: ListView(
         children: [
           FutureBuilder<List<Persona>>(
-            future: persForm.getListaPersona(argPersona.persId),
+            initialData: [],
+            future: persForm.getHomePersona(argUsuario.idUsuario),
             builder:
                 (BuildContext context, AsyncSnapshot<List<Persona>> snapshot) {
               List<Persona> pers = snapshot.data ?? [];
@@ -82,6 +85,7 @@ class _BackgroundImage extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline6,
                             ),
+                            leading: Icon(Icons.people_alt_outlined),
                             // bloque de encabezado isquierdo icono pluma
                             trailing: IconButton(
                               icon: Icon(Icons.edit),
@@ -229,6 +233,7 @@ class _BackgroundImage extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline6,
                             ),
+                            leading: Icon(Icons.house_outlined),
                             trailing: Icon(Icons.edit),
                           ),
                           Text(
@@ -262,7 +267,6 @@ class _BackgroundImage extends StatelessWidget {
                         builder: (BuildContext context,
                             AsyncSnapshot<List<Familiar>> snapshot) {
                           List<Familiar> famil = snapshot.data ?? [];
-
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -272,6 +276,7 @@ class _BackgroundImage extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.headline6,
                                 ),
+                                leading: Icon(Icons.account_box_outlined),
                                 trailing: Icon(Icons.edit),
                               ),
                               for (Familiar familia in famil)
@@ -318,69 +323,59 @@ class _BackgroundImage extends StatelessWidget {
                   ),
                   // bloque de historial médico
                   Container(
-                    child: Column(
-                      children: [
-                        FutureBuilder<List<Enfermedad>>(
-                          future: expForm.getListaExpediente(),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<Enfermedad>> snapshot) {
-                            List<Enfermedad> exp = snapshot.data ?? [];
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ListTile(
-                                  title: Text(
-                                    'Historial Médico',
-                                    textAlign: TextAlign.center,
+                    child: FutureBuilder<List<Enfermedad>>(
+                      future: expForm.getListaExpediente(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<Enfermedad>> snapshot) {
+                        List<Enfermedad> exp = snapshot.data ?? [];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListTile(
+                              title: Text(
+                                'Historial Médico',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                              leading: Icon(Icons.history),
+                              trailing: Icon(Icons.edit),
+                            ),
+                            for (Enfermedad expediente in exp)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Enfermedad: ' + expediente.enferNombre,
                                     style:
-                                        Theme.of(context).textTheme.headline6,
+                                        Theme.of(context).textTheme.bodyText2,
                                   ),
-                                  trailing: Icon(Icons.edit),
-                                ),
-                                for (Enfermedad expediente in exp)
-                                  Container(
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          'Enfermedad: ' +
-                                              expediente.enferNombre,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                        ),
-                                        SizedBox(height: 10),
-                                        Text(
-                                          'Dosificación: ' +
-                                              expediente.enferDescDosificacion,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                        ),
-                                        SizedBox(height: 10),
-                                        Text(
-                                          'Medicación: ' +
-                                              expediente.enferDescMedicacion,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                        ),
-                                        SizedBox(height: 10),
-                                        Text(
-                                          'Enfermedad: ' +
-                                              expediente.enferDescEnfermedad,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                              ],
-                            );
-                          },
-                        )
-                        // aqui abajo future cierra
-                      ],
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'Dosificación: ' +
+                                        expediente.enferDescDosificacion,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2,
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'Medicación: ' +
+                                        expediente.enferDescMedicacion,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2,
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'Enfermedad: ' +
+                                        expediente.enferDescEnfermedad,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2,
+                                  ),
+                                ],
+                              )
+                          ],
+                        );
+                        //);
+                      },
                     ),
                     //color: Colors.grey,
                   ),

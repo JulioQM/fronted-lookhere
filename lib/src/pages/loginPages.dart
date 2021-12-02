@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fronted_lookhere/src/arguments/exportArguments.dart';
 import 'package:fronted_lookhere/src/models/exportModels.dart';
 import 'package:fronted_lookhere/src/provider/exportProvider.dart';
 import 'package:fronted_lookhere/src/utils/exportUtils.dart';
 import 'package:fronted_lookhere/src/widgets/exportWidgets.dart';
-import 'package:fronted_lookhere/src/widgets/widgetArgument.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class LoginPages extends StatelessWidget {
   @override
@@ -52,7 +53,6 @@ class _FormularioLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     // con esta variable puedo ingresar a la instancia de la clase LoginFormProvider
     final loginForm = Provider.of<LoginProvider>(context, listen: true);
-    final persForm = Provider.of<PersonaProvider>(context, listen: true);
     return Container(
       child: Form(
           key: loginForm.formKey,
@@ -71,7 +71,7 @@ class _FormularioLogin extends StatelessWidget {
                 onChanged: (value) =>
                     loginForm.managerUsuario.setUsuaAlias = value,
                 validator: (value) {
-                  return (value != null && value.length > 1)
+                  return (value != null && value.isNotEmpty)
                       ? null
                       : 'El usuario es obligatoria';
                 },
@@ -90,7 +90,7 @@ class _FormularioLogin extends StatelessWidget {
                 onChanged: (value) =>
                     loginForm.managerUsuario.setUsuaClave = value,
                 validator: (value) {
-                  return (value != null && value.length > 1)
+                  return (value != null && value.isNotEmpty)
                       ? null
                       : 'La contraseña es obligatoria';
                 },
@@ -118,14 +118,22 @@ class _FormularioLogin extends StatelessWidget {
                         if (!loginForm.isValidForm()) return;
                         RespuestaModel respuesta =
                             await loginForm.autentiacion();
+
                         if (respuesta.success ?? true) {
                           // si es correcto me navegara a la pantalla principal
                           loginForm.isLoading = true;
+                          Map<String, dynamic> userId =
+                              jsonDecode(respuesta.data);
+                          print(userId);
                           print(respuesta.mensaje);
                           await Future.delayed(Duration(seconds: 2));
-                          Navigator.pushReplacementNamed(context, 'home',
-                              arguments: WidgetArguments(
-                                  loginForm.managerUsuario.getUsuaAlias));
+                          Navigator.pushReplacementNamed(
+                            context,
+                            'home',
+                            arguments: UsuarioIdArguments(
+                              idUsuario: userId['usua_id'],
+                            ),
+                          );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(respuesta.mensaje),
@@ -133,29 +141,12 @@ class _FormularioLogin extends StatelessWidget {
                         }
                       },
               ),
-              MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                color: Colors.pink,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                  child: Text(
-                    'Ingresar',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                onPressed: () async {
-                  var a = await persForm.getListaPersona(2);
-                  print(a);
-                  Navigator.pushReplacementNamed(context, 'perfil');
-                },
-              ),
 
               SizedBox(height: 30),
               TextButtons.etiquetaTextButton(
                   titulo: 'Ingresar como administrador',
-                  direccionamientoPagina: 'home',
+                  /* direccionamientoPagina: 'home', */
+                  direccionamientoPagina: 'login',
                   context: context),
             ],
           )),
