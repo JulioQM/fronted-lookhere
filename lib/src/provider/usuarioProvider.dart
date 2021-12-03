@@ -21,59 +21,65 @@ class UsuarioProvider extends ChangeNotifier {
   }
 
   Future<RespuestaModel> registrarUsuario() async {
-    var url = Uri.https(path.rutaEndPoint, path.pathUsuario);
-    print(url);
-    var response = await http.post(url,
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({
-          'rol_id': '2',
-          'usua_alias': managerUsuario.getUsuaAlias,
-          'usua_clave': managerUsuario.getUsuaClave,
-          'usua_email': managerUsuario.getUsuaEmail
-        }));
-    print(response.statusCode);
-
-    /*   
-    print(response.body); */
-
-    if (response.statusCode == 200) {
-      return RespuestaModel(
-        success: true,
-        data: response.body,
-        mensaje: json.decode(response.body)['msg'],
-      );
-    } else
-      return RespuestaModel(
-        success: false,
-        data: response.body,
-        mensaje: json.decode(response.body)['errors'][0]['msg'],
-      );
+    try {
+      var url = Uri.https(path.rutaEndPoint, path.pathUsuario);
+      print(url);
+      var response = await http.post(url,
+          headers: {'Content-Type': 'application/json; charset=UTF-8'},
+          body: jsonEncode({
+            'rol_id': '2',
+            'usua_alias': managerUsuario.getUsuaAlias,
+            'usua_clave': managerUsuario.getUsuaClave,
+            'usua_email': managerUsuario.getUsuaEmail
+          }));
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return RespuestaModel(
+          success: true,
+          data: response.body,
+          mensaje: json.decode(response.body)['msg'],
+        );
+      } else
+        return RespuestaModel(
+          success: false,
+          data: response.body,
+          mensaje: json.decode(response.body)['errors'][0]['msg'],
+        );
+    } catch (e) {
+      print(e.errorMessage());
+      return null;
+    }
   }
 
   // VALIDADOR
   Future<RespuestaModel> validarUsuario() async {
-    var url = Uri.https(path.rutaEndPoint, path.pathUsuarioValidador);
-    print(url);
-    var response = await http.post(url,
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({
-          'rol_id': '2',
-          'usua_alias': managerUsuario.getUsuaAlias,
-          'usua_clave': managerUsuario.getUsuaClave,
-          'usua_email': managerUsuario.getUsuaEmail
-        }));
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      return RespuestaModel(
-        success: true,
-        data: response.body,
-        mensaje: json.decode(response.body)['msg'],
-      );
-    } else
-      return RespuestaModel(
-        success: false,
-        data: response.body,
-        mensaje: json.decode(response.body)['errors'][0]['msg'],
-      );
+    try {
+      var url = Uri.https(path.rutaEndPoint, path.pathUsuarioValidador);
+      print(url);
+      var response = await http.post(url,
+          headers: {'Content-Type': 'application/json; charset=UTF-8'},
+          body: jsonEncode({
+            'rol_id': '2',
+            'usua_alias': managerUsuario.getUsuaAlias,
+            'usua_clave': managerUsuario.getUsuaClave,
+            'usua_email': managerUsuario.getUsuaEmail
+          }));
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return RespuestaModel(
+          success: true,
+          data: response.body,
+          mensaje: json.decode(response.body)['msg'],
+        );
+      } else
+        return RespuestaModel(
+          success: false,
+          data: response.body,
+          mensaje: json.decode(response.body)['errors'][0]['msg'],
+        );
+    } catch (e) {
+      print(e.errorMessage());
+      return null;
+    }
   }
 }

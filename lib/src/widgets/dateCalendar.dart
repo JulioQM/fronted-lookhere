@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fronted_lookhere/src/utils/exportUtils.dart';
+import 'package:intl/intl.dart';
 
 class DataCalendars extends StatefulWidget {
   @override
@@ -34,16 +35,26 @@ class _DataCalendarsState extends State<DataCalendars> {
   }
 
   selectDate(BuildContext context) async {
+    DateTime selectedDate = DateTime.now();
+    var now = new DateTime.now();
+    var formatterAno = new DateFormat('y');
     DateTime picked = await showDatePicker(
         context: context,
-        initialDate: new DateTime.now(),
-        firstDate: new DateTime.now(),
-        lastDate: new DateTime(2025),
+        initialDate: DateTime(int.parse(formatterAno.format(now)) - 5),
+        firstDate: DateTime(int.parse(formatterAno.format(now)) - 70),
+        lastDate: DateTime(int.parse(formatterAno.format(now)) - 5),
         locale: Locale('es', 'ES'));
     if (picked != null) {
       setState(() {
-        fecha = picked.toString();
-        inputFielDateController.text = fecha;
+        //fecha = picked.toString();
+        /* inputFielDateController.text = fecha; */
+        selectedDate = picked;
+        inputFielDateController.text =
+            "${selectedDate.toLocal()}".split(' ')[0];
+
+        print('.......');
+        print("${selectedDate.toLocal()}".split(' ')[0]);
+        print('.......');
       });
     }
   }

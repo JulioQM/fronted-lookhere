@@ -125,6 +125,7 @@ class _FormularioLogin extends StatelessWidget {
                           Map<String, dynamic> userId =
                               jsonDecode(respuesta.data);
                           print(userId);
+                          print(respuesta.data);
                           print(respuesta.mensaje);
                           await Future.delayed(Duration(seconds: 2));
                           Navigator.pushReplacementNamed(

@@ -100,7 +100,7 @@ class _FormularioRegister extends StatelessWidget {
                   ? null
                   : () async {
                       FocusScope.of(context).unfocus(); // bloquea mi boton
-                      if (!usuarioForm.isValidForm()) return;
+                      if (!personaForm.isValidForm()) return;
                       personaForm.isLoading = true;
                       // llamo a mis parametros de otras clases como usuario y primera parte de identificacion
                       final IdentidadArguments argPersona =

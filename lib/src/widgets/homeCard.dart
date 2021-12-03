@@ -261,60 +261,68 @@ class _BackgroundImage extends StatelessWidget {
                     color: Colors.indigo,
                   ),
                   // bloque de contacto familiar
-                  Container(
-                    child: FutureBuilder<List<Familiar>>(
-                        future: familForm.getListaFamiliar(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<List<Familiar>> snapshot) {
-                          List<Familiar> famil = snapshot.data ?? [];
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ListTile(
-                                title: Text(
-                                  'Contacto Familiar: ',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline6,
+                  for (Persona persona in pers)
+                    Container(
+                      child: FutureBuilder<List<Familiar>>(
+                          future: familForm.getListaFamiliar(
+                              busqueda: persona.persId),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<Familiar>> snapshot) {
+                            List<Familiar> famil = snapshot.data ?? [];
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  title: Text(
+                                    'Contacto Familiar',
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  ),
+                                  leading: Icon(Icons.account_box_outlined),
+                                  trailing: Icon(Icons.edit),
                                 ),
-                                leading: Icon(Icons.account_box_outlined),
-                                trailing: Icon(Icons.edit),
-                              ),
-                              for (Familiar familia in famil)
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Nombres completos:' +
-                                          familia.familNombres,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Celular: ' + familia.familCelular,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Teléfono convencional: ' +
-                                          familia.familConvencional,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Dirección: ' + familia.familDireccion,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
-                                    ),
-                                  ],
-                                ),
-                            ],
-                          );
-                        }),
-                    //color: Colors.green,
-                  ),
+                                for (Familiar familia in famil)
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Nombres completos:' +
+                                            familia.familNombres,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'Celular: ' + familia.familCelular,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'Teléfono convencional: ' +
+                                            familia.familConvencional,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
+                                      SizedBox(height: 10),
+                                      Text(
+                                        'Dirección: ' + familia.familDireccion,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            );
+                          }),
+                      //color: Colors.green,
+                    ),
 
                   /// punto de roptura del future builder familiar
                   Divider(
@@ -322,63 +330,65 @@ class _BackgroundImage extends StatelessWidget {
                     color: Colors.indigo,
                   ),
                   // bloque de historial médico
-                  Container(
-                    child: FutureBuilder<List<Enfermedad>>(
-                      future: expForm.getListaExpediente(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<Enfermedad>> snapshot) {
-                        List<Enfermedad> exp = snapshot.data ?? [];
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ListTile(
-                              title: Text(
-                                'Historial Médico',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.headline6,
+                  for (Persona persona in pers)
+                    Container(
+                      child: FutureBuilder<List<Enfermedad>>(
+                        future: expForm.getListaExpediente(
+                            busqueda: persona.persId),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<List<Enfermedad>> snapshot) {
+                          List<Enfermedad> exp = snapshot.data ?? [];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  'Historial Médico',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline6,
+                                ),
+                                leading: Icon(Icons.history),
+                                trailing: Icon(Icons.edit),
                               ),
-                              leading: Icon(Icons.history),
-                              trailing: Icon(Icons.edit),
-                            ),
-                            for (Enfermedad expediente in exp)
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Enfermedad: ' + expediente.enferNombre,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText2,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    'Dosificación: ' +
-                                        expediente.enferDescDosificacion,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText2,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    'Medicación: ' +
-                                        expediente.enferDescMedicacion,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText2,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    'Enfermedad: ' +
-                                        expediente.enferDescEnfermedad,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText2,
-                                  ),
-                                ],
-                              )
-                          ],
-                        );
-                        //);
-                      },
+                              for (Enfermedad expediente in exp)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Enfermedad: ' + expediente.enferNombre,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Enfermedad: ' +
+                                          expediente.enferDescEnfermedad,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Dosificación: ' +
+                                          expediente.enferDescDosificacion,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Medicación: ' +
+                                          expediente.enferDescMedicacion,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
+                                    ),
+                                  ],
+                                )
+                            ],
+                          );
+                          //);
+                        },
+                      ),
+                      //color: Colors.grey,
                     ),
-                    //color: Colors.grey,
-                  ),
                   Divider(
                     thickness: 1.5,
                     color: Colors.indigo,

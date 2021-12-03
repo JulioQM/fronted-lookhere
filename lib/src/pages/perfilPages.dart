@@ -11,10 +11,16 @@ class PerfilPages extends StatelessWidget {
           'Perfil',
         ),
         leading: IconButton(
-            icon: Icon(Icons.exit_to_app),
+            icon: Icon(Icons.menu),
             onPressed: () {
               Navigator.pushReplacementNamed(context, 'login');
             }),
+        actions: <Widget>[
+          IconButton(
+            icon: new Icon(Icons.exit_to_app),
+            onPressed: () => Navigator.pushReplacementNamed(context, 'login'),
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: 1,
@@ -23,10 +29,3 @@ class PerfilPages extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-

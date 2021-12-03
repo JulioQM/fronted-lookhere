@@ -8,22 +8,27 @@ class ProvinciaProvider extends ChangeNotifier {
   //Provincia managerProvincia = new Provincia();
   // metodo que extrae mis datos
   Future<List<Provincia>> getProvincias() async {
-    var url = Uri.https(path.rutaEndPoint, path.pathProvincia);
-    final response = await http.get(url);
-    // cogo los datos de la ruta
-    var provincia = json.decode(response.body);
-    // creo una lista de provincia
-    List<Provincia> prov = [];
-    // recorro mi areglo de provincias
-    for (var p in provincia) {
-      // esas provincias le agrego a mi mapa ,y itero
-      prov.add(Provincia.fromMap(p));
+    try {
+      var url = Uri.https(path.rutaEndPoint, path.pathProvincia);
+      final response = await http.get(url);
+      // cogo los datos de la ruta
+      var provincia = json.decode(response.body);
+      // creo una lista de provincia
+      List<Provincia> prov = [];
+      // recorro mi areglo de provincias
+      for (var p in provincia) {
+        // esas provincias le agrego a mi mapa ,y itero
+        prov.add(Provincia.fromMap(p));
+      }
+      // imprimo la lista de solo nombres de provincias
+      for (var p in prov) {
+        print(p.provNombre);
+      }
+      // Retorno mi lista de provincias
+      return prov;
+    } catch (e) {
+      print(e.errorMessage());
+      return null;
     }
-    // imprimo la lista de solo nombres de provincias
-    for (var p in prov) {
-      print(p.provNombre);
-    }
-    // Retorno mi lista de provincias
-    return prov;
   }
 }

@@ -9,7 +9,7 @@ class EndPoints {
   String pathEnfermedad = '/api/lookhere/enfermedad/';
   String pathProvincia = '/api/lookhere/provincia/';
   String pathCiudad = '/api/lookhere/ciudad/';
-  String pathFamiliar = '/api/lookhere/familiar';
+  String pathFamiliar = '/api/lookhere/familiar/';
 
   // ruta de consulta para visulizar el perfil al momento del registro
   String pathPerfilJoin = '/api/lookhere/personaJoin/';

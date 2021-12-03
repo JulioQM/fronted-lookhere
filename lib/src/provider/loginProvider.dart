@@ -25,24 +25,29 @@ class LoginProvider extends ChangeNotifier {
   }
 
   Future<RespuestaModel> autentiacion() async {
-    var url = Uri.https(path.rutaEndPoint, path.pathAutenticacion);
-    var response = await http.post(url,
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({
-          'usua_alias': managerUsuario.getUsuaAlias,
-          'usua_clave': managerUsuario.getUsuaClave
-        }));
-    if (response.statusCode == 200) {
-      return RespuestaModel(
-        success: true,
-        data: response.body,
-        mensaje: json.decode(response.body)['message'],
-      );
-    } else
-      return RespuestaModel(
-        success: false,
-        data: response.body,
-        mensaje: json.decode(response.body)['message'],
-      );
+    try {
+      var url = Uri.https(path.rutaEndPoint, path.pathAutenticacion);
+      var response = await http.post(url,
+          headers: {'Content-Type': 'application/json; charset=UTF-8'},
+          body: jsonEncode({
+            'usua_alias': managerUsuario.getUsuaAlias,
+            'usua_clave': managerUsuario.getUsuaClave
+          }));
+      if (response.statusCode == 200) {
+        return RespuestaModel(
+          success: true,
+          data: response.body,
+          mensaje: json.decode(response.body)['message'],
+        );
+      } else
+        return RespuestaModel(
+          success: false,
+          data: response.body,
+          mensaje: json.decode(response.body)['message'],
+        );
+    } catch (e) {
+      print(e.errorMessage());
+      return null;
+    }
   }
 }

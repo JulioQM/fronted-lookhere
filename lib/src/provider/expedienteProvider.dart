@@ -22,49 +22,56 @@ class ExpedienteProvider extends ChangeNotifier {
   }
 
   Future<RespuestaModel> registrarExpediente() async {
-    var url = Uri.https(path.rutaEndPoint, path.pathEnfermedad);
-    print(url);
-    var response = await http.post(url,
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({
-          "pers_id": managerExpediente.getPersId,
-          "enfer_nombre": managerExpediente.getEnferNombre,
-          "enfer_desc_medicacion": managerExpediente.getEnferDescMedicacion,
-          "enfer_desc_dosificacion": managerExpediente.getEnferDescDosificacion,
-          "enfer_desc_enfermedad": managerExpediente.getEnferDescEnfermedad
-        }));
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      return RespuestaModel(
-        success: true,
-        data: response.body,
-        mensaje: json.decode(response.body)['msg'],
-      );
-    } else
-      return RespuestaModel(
-        success: false,
-        data: response.body,
-        mensaje: json.decode(response.body)['msg'],
-      );
+    try {
+      var url = Uri.https(path.rutaEndPoint, path.pathEnfermedad);
+      var response = await http.post(url,
+          headers: {'Content-Type': 'application/json; charset=UTF-8'},
+          body: jsonEncode({
+            "pers_id": managerExpediente.getPersId,
+            "enfer_nombre": managerExpediente.getEnferNombre,
+            "enfer_desc_medicacion": managerExpediente.getEnferDescMedicacion,
+            "enfer_desc_dosificacion":
+                managerExpediente.getEnferDescDosificacion,
+            "enfer_desc_enfermedad": managerExpediente.getEnferDescEnfermedad
+          }));
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return RespuestaModel(
+          success: true,
+          data: response.body,
+          mensaje: json.decode(response.body)['msg'],
+        );
+      } else
+        return RespuestaModel(
+          success: false,
+          data: response.body,
+          mensaje: json.decode(response.body)['msg'],
+        );
+    } catch (e) {
+      print(e.errorMessage());
+      return null;
+    }
   }
 
   // consultar familiar
-  Future<List<Enfermedad>> getListaExpediente() async {
-    var url = Uri.https(path.rutaEndPoint, path.pathEnfermedad);
-    print(url);
-    var response = await http.get(url);
-    var expe = json.decode(response.body);
-    Map<String, dynamic> users = {'expediente': expe[0]};
-    List<Enfermedad> exp = [];
-    users.forEach((key, value) {
-      exp.add(Enfermedad.fromMap(value));
-    });
-    for (var p in exp) {
-      print(p.enferDescDosificacion);
-      print(p.enferNombre);
-      print(p.enferDescMedicacion);
-      print(p.enferDescEnfermedad);
+  Future<List<Enfermedad>> getListaExpediente({int busqueda}) async {
+    try {
+      var url = Uri.https(
+          path.rutaEndPoint, path.pathEnfermedad + busqueda.toString());
+      var response = await http.get(url);
+      var expe = json.decode(response.body);
+      print(expe);
+      /*  Map<String, dynamic> users = {'expediente': expe[0]}; */
+      Map<String, dynamic> users = {'expediente': expe};
+      print(users);
+      List<Enfermedad> exp = [];
+      users.forEach((key, value) {
+        exp.add(Enfermedad.fromMap(value));
+      });
+      return exp;
+    } catch (e) {
+      print(e.errorMessage());
+      return null;
     }
-    return exp;
   }
 }

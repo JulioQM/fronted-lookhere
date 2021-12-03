@@ -21,51 +21,58 @@ class FamiliaProvider extends ChangeNotifier {
   }
 
   Future<RespuestaModel> registrarFamiliar() async {
-    var url = Uri.https(path.rutaEndPoint, path.pathFamiliar);
-    print(url);
-    var response = await http.post(url,
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: jsonEncode({
-          "pers_id": managerFamiliar.getPersId,
-          "famil_nombres": managerFamiliar.getFamilNombres,
-          "famil_apellidos": managerFamiliar.getFamilApellidos,
-          "famil_celular": managerFamiliar.getFamilCelular,
-          "famil_convencional": managerFamiliar.getFamilConvencional,
-          "famil_direccion": managerFamiliar.getFamilDireccion
-        }));
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      return RespuestaModel(
-        success: true,
-        data: response.body,
-        mensaje: json.decode(response.body)['msg'],
-      );
-    } else
-      return RespuestaModel(
-        success: false,
-        data: response.body,
-        mensaje: json.decode(response.body)['msg'],
-      );
+    try {
+      var url = Uri.https(path.rutaEndPoint, path.pathFamiliar);
+      print(url);
+      var response = await http.post(url,
+          headers: {'Content-Type': 'application/json; charset=UTF-8'},
+          body: jsonEncode({
+            "pers_id": managerFamiliar.getPersId,
+            "famil_nombres": managerFamiliar.getFamilNombres,
+            "famil_apellidos": managerFamiliar.getFamilApellidos,
+            "famil_celular": managerFamiliar.getFamilCelular,
+            "famil_convencional": managerFamiliar.getFamilConvencional,
+            "famil_direccion": managerFamiliar.getFamilDireccion
+          }));
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return RespuestaModel(
+          success: true,
+          data: response.body,
+          mensaje: json.decode(response.body)['msg'],
+        );
+      } else
+        return RespuestaModel(
+          success: false,
+          data: response.body,
+          mensaje: json.decode(response.body)['msg'],
+        );
+    } catch (e) {
+      print(e.errorMessage());
+      return null;
+    }
   }
 
   // consultar familiar
-  Future<List<Familiar>> getListaFamiliar() async {
-    var url = Uri.https(path.rutaEndPoint, path.pathFamiliar);
-    print(url);
-    var response = await http.get(url);
-    Map<String, dynamic> user = jsonDecode(response.body);
-    /*  print(user['familiar'][0]); */
-    Map<String, dynamic> users = {'familiar': user['familiar'][0]};
-    /* print('.......');
-    var pr = {"familiar": users}; */
-    List<Familiar> famil = [];
-    users.forEach((key, value) {
-      famil.add(Familiar.fromMap(value));
-    });
-    for (var p in famil) {
-      print(p.familNombres);
-      print(p.familApellidos);
+  Future<List<Familiar>> getListaFamiliar({int busqueda}) async {
+    try {
+      var url =
+          Uri.https(path.rutaEndPoint, path.pathFamiliar + busqueda.toString());
+      print(url);
+      var response = await http.get(url);
+      Map<String, dynamic> user = jsonDecode(response.body);
+      print(user);
+      /* Map<String, dynamic> users = {'familiar': user['familiar'][0]}; */
+      //Map<String, dynamic> users = {'familiar': user};
+      //print(users);
+      List<Familiar> famil = [];
+      user.forEach((key, value) {
+        famil.add(Familiar.fromMap(value));
+      });
+      return famil;
+    } catch (e) {
+      print(e.errorMessage());
+      return null;
     }
-    return famil;
   }
 }
